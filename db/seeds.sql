@@ -5,26 +5,28 @@ VALUES ("Finance"),
        ("Legal"),
        ("Creative");
 
-       INSERT INTO departments (title, department, salary)
-VALUES ("Software Engineer", "Engineering", 120000),
-       ("Account Manager", "Finance", 160000),
-       ("Accountant", "Finance", 125000),
-       ("Legal Team Lead", "Legal", 250000),
-       ("Lawyer", "Engineering", 190000),
-       ("Lead Software Engineer", "Engineering", 25000),
-       ("Creative Director", "Creative", 25000),
-       ("Senior Designer", "Creative", 100000),
-       ("Copy Writer", "Creative", 110000)
+       INSERT INTO roles (title, department_id, salary)
+VALUES ("Software Engineer", 2, 120000),
+       ("Account Manager", 1, 160000),
+       ("Accountant", 1, 125000),
+       ("Legal Team Lead", 4, 250000),
+       ("Lawyer", 4, 190000),
+       ("Lead Software Engineer", 2, 25000),
+       ("Creative Director", 5, 25000),
+       ("Senior Designer", 5, 100000),
+       ("Copy Writer", 5, 110000),
+       ("Sales Lead", 3, 110000),
+       ("Salesperson", 3, 110000)
 
-       INSERT INTO employees (first_name, last_name, title, department, salary, manager)
-VALUES ("John", "Meyer", "Software Engineer", "Engineering", 120000),
-       ("Julia", "White","Account Manager", "Finance", 160000),
-       ("Robert", "Smith","Accountant", "Finance", 125000),
-       ("Jessica", "Spears","Legal Team Lead", "Legal", 250000),
-       ("Peter", "McDonals","Lawyer", "Engineering", 190000),
-       ("Briana", "Lowel","Lead Software Engineer", "Engineering", 25000),
-       ("Katherine", "Grey","Creative Director", "Creative", 25000),
-       ("Bryan", "Ruth","Senior Designer", "Creative", 100000),
-       ("Hannah", "Gold","Copy Writer", "Creative", 110000)
+       INSERT INTO employees (first_name, last_name, role_id, manager_id)
+VALUES ("John", "Meyer", 1, 6),
+       ("Julia", "White", 2, NULL),
+       ("Robert", "Smith", 3, 1),
+       ("Jessica", "Spears", 4, NULL),
+       ("Peter", "McDonals", 5, 4),
+       ("Briana", "Lowel", 6,  NULL),
+       ("Katherine", "Grey", 7,  NULL),
+       ("Bryan", "Ruth", 8, 7),
+       ("Hannah", "Gold", 3, 7)
 
        
