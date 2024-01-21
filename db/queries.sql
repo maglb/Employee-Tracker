@@ -1,15 +1,8 @@
--- SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, employees.manager_id 
--- FROM employees
--- JOIN roles ON employees.role_id = roles.id;
 
--- -- Combine name for managers
--- SELECT a.id, a.first_name, a.last_name,
--- CONCAT(b.first_name," ", b.last_name) AS manager
--- FROM employees AS a
--- LEFT JOIN employees AS b
--- ON a.manager_id = b.id;
-
-
+-- Combine roles and department tables
+SELECT roles.id, roles.title, departments.department_name, roles.salary
+FROM roles
+JOIN departments ON departments.id = roles.department_id;
 
 SELECT a.id, a.first_name, a.last_name, roles.title, roles.salary,
 -- Combine first and last name of the employees and set them under manager
