@@ -1,61 +1,59 @@
-// TODO: Include packages needed for this application
 const inquirer = require('inquirer');
-const fs = require('fs');
-const generateMarkdown = require('./utils/generateMarkdown');
+const { viewEmployees } = require('./employees');
+const express = require('express');
+const mysql = require('mysql2/promise');
 
-// TODO: Create an array of questions for user input
-const questions = ['Provide a title for your project', 'What was your motivation?', 'What did you learn?', 'What are the steps required to install your project?', 'Provide instructions and examples for use.', 'Choose a license.'];
+// const PORT = process.env.PORT || 3001;
+// const app = express();
 
-const getAnswer = () => {
-    return inquirer.prompt([
-    {
-        type: 'input',
-        name: 'title',
-        message: questions[0],
-      },
-    {
-      type: 'input',
-      name: 'motivation',
-      message: questions[1],
-    },
-    {
-      type: 'input',
-      name: 'learning',
-      message: questions[2],
-    },
-    {
-      type: 'input',
-      name: 'steps',
-      message: questions[3],
-    },
-    {
-      type: 'input',
-      name: 'instructions',
-      message: questions[4],
-    },
-    {
-        type: 'list',
-        name: 'license',
-        message: questions[5],
-        choices: ["Apache", "IBM", "MIT", "Mozilla", "Unlicense", "None"]
-      },
-  ])}; 
+// // Express middleware
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
 
-
-// TODO: Create a function to write README file
-function writeToFile(filename, data) {
-fs.writeFile(filename, data, (err) => {}
-  );
+const startApp = () => {
+  return inquirer.prompt([
+    {
+      type: 'list',
+      message: 'What would you like to do?',
+      name: 'options',
+      choices: ['View All Employees', 'Add An Employee', 'Update An Employee Role', 'View All Roles', 'Add A Role', 'View All Departments', 'Add A Department', 'Exit']
+    },
+  ])
 };
-
 
 // TODO: Create a function to initialize app
 function init() {
-    getAnswer()
-    .then ((data) => writeToFile('README.md', generateMarkdown(data)))
-    .then(() => console.log('Successfully wrote to README.md'))
+  startApp()
+    .then((data) => {
+      switch (data.options) {
+        case 'View All Employees':
+          return viewEmployees()
+          break;
+        case 'Add An Employee':
+          return addEmployee()
+          break;
+        case 'Update An Employee Role':
+          return updateEmployee()
+          break;
+        case 'View All Roles':
+          return viewRoles()
+          break;
+        case 'Add A Role':
+          return addRole()
+          break;
+        case 'View All Departments':
+          return viewDepartments()
+          break;
+        case 'Add A Department':
+          return addDepartment()
+          break;
+        case 'Exit':
+          return exit()
+          break;
+      }
+    })
     .catch((err) => console.error(err));
-}
+};
 
 // Function call to initialize app
 init();

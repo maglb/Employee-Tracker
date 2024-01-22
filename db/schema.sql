@@ -27,4 +27,4 @@ CREATE TABLE employees (
   REFERENCES roles(id)
 );
 
-
+SELECT DATABASE();
