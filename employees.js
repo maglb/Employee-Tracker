@@ -1,26 +1,13 @@
-const express = require('express');
+const express = require("express");
+const inquirer = require("inquirer");
 
 // See all employees
 const viewEmployees = (connection) => {
-    const allEmployees = `SELECT a.id, a.first_name, a.last_name, roles.title, roles.salary,
+  const allEmployees = `SELECT a.id, a.first_name, a.last_name, roles.title, roles.salary,
 CONCAT(b.first_name," ", b.last_name) AS manager 
 FROM employees AS a
 LEFT JOIN employees AS b ON a.manager_id = b.id
 JOIN roles ON a.role_id = roles.id;`;
-
-    connection.query(allEmployees)
-        .then(function (results) {
-            console.table(results[0]);
-        }
-        )
-        .catch((err) => {
-            console.log(err);
-        })
-};
-
-const addEmployees = (connection) => {
-  const addInfo = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
-  VALUES (${first_name}, ${last_name}, ${role}, ${manager});`;
 
   connection
     .query(allEmployees)
@@ -32,6 +19,21 @@ const addEmployees = (connection) => {
     });
 };
 
+const addEmployees = () => {
+  newEmployee().then((data) => {
+    const addInfo = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+  VALUES (${first_name}, ${last_name}, ${role_id}, ${manager_id});`;
+
+    connection
+      .query(allEmployees)
+      .then(function (results) {
+        console.table(results[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+};
 
 const newEmployee = () => {
   return inquirer.prompt([
@@ -58,4 +60,4 @@ const newEmployee = () => {
   ]);
 };
 
-module.exports = { viewEmployees };
+module.exports = { viewEmployees, addEmployees };
