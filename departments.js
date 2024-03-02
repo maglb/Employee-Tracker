@@ -5,7 +5,7 @@ const inquirer = require("inquirer");
 const viewDepartments = (connection) => {
   const allDepartments = `SELECT * FROM departments;`;
 
-  connection
+  return connection
     .query(allDepartments)
     .then(function (results) {
       console.table(results[0]);
@@ -20,12 +20,12 @@ const addDepartment = (connection) => {
   // Get data for all roles
   return Promise.all([
     connection.query(
-      "SELECT id AS value, department_name AS name FROM department"
+      "SELECT id AS value, department_name AS name FROM departments"
     ),
   ])
     .then((result) => {
       const departments = result[0][0];
-      console.log(departments);
+      // console.log(departments);
       return inquirer.prompt([
         {
           type: "input",
@@ -35,15 +35,13 @@ const addDepartment = (connection) => {
       ]);
     })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
 
       const addInfo = `INSERT INTO departments (department_name) VALUES (?);`;
       return connection.query(addInfo, [data.department]);
     })
-    .then(function (results) {
-         console.log(
-           `${data.department} has been added to the database!`
-         );
+    .then(function () {
+      console.log(`New department has been added to the database!`);
     })
     .catch((err) => {
       console.log(err);
