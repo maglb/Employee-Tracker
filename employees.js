@@ -19,20 +19,6 @@ JOIN roles ON a.role_id = roles.id;`;
     });
 };
 
-// const addEmployees = (data) => {
-//   const addInfo = `INSERT INTO employees (first_name, last_name, title, manager)
-//   VALUES ('${data.first_name}', '${data.last_name}', ${data.role}, ${data.manager});`;
-
-//   connection
-//     .query(addInfo)
-//     .then(function (results) {
-//       console.table(results[0]);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
-
 // Get data about new employee
 const newEmployee = (connection) => {
   // Get data for all employee
@@ -92,7 +78,8 @@ const newEmployee = (connection) => {
       ]);
     })
     .then(function (results) {
-      console.table(results[0]);
+      // console.table(results[0]);
+      console.log(`${data.first_name} ${data.last_name} has been added to the database!`);
     })
     .catch((err) => {
       console.log(err);
