@@ -68,4 +68,49 @@ const addRole = (connection) => {
     });
 };
 
-module.exports = { viewRoles, addRole };
+// Update an Employee's role
+
+const updateRole = (connection) => {
+  // Get data for all roles and employees' name
+  return Promise.all([
+    connection.query("SELECT id AS value, title AS name FROM roles"),
+    connection.query(
+      "SELECT id AS value, CONCAT (first_name, ' ', last_name) AS name FROM employees"
+    ),
+  ])
+    .then(([[roles], [employees]]) => {
+
+      // Collect data about which employee and which role to update to
+      return inquirer.prompt([
+        {
+          type: "list",
+          name: "employee",
+          message: "Which employee's role do you want to update?",
+          choices: employees,
+        },
+        {
+          type: "list",
+          name: "role",
+          message: "Which role do you want to assign the selected employee?",
+          choices: roles,
+        },
+      ]);
+    })
+    .then((data) => {
+      
+      // Update role of selected employee
+      const updateInfo = `UPDATE employees
+SET role_id = ?
+WHERE id = ?;`;
+
+      return connection.query(updateInfo, [data.role, data.employee]);
+    })
+    .then(function () {
+      console.log(`Employee's role updated!`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+module.exports = { viewRoles, addRole, updateRole };
