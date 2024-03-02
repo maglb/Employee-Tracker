@@ -19,10 +19,9 @@ JOIN roles ON a.role_id = roles.id;`;
     });
 };
 
-// Get data about new employee
+// Add New Employee
 const newEmployee = (connection) => {
-  // Get data for all employee
-  // connection.query('SELECT id, title FROM roles');
+  // Get data for all roles and concat first and last name of current employees
   return Promise.all([
     connection.query("SELECT id AS value, title AS name FROM roles"),
     connection.query(
@@ -32,12 +31,16 @@ const newEmployee = (connection) => {
     .then(([[roles], [employees]]) => {
       // const roles = result[0][0];
       // const employees = result[1][0];
+
+      // Add option 'None' to managers
       employees.push({
         name: "None",
         value: null,
       });
-      console.log(roles);
-      console.log(employees);
+      // console.log(roles);
+      // console.log(employees);
+
+      // Collect data about new employee
       return inquirer.prompt([
         {
           type: "input",
@@ -62,9 +65,10 @@ const newEmployee = (connection) => {
       ]);
     })
     .then((data) => {
-      console.log(data);
-      // addEmployees(data);
+      // console.log(data);
+      // Insert new data into employees table
       const addInfo = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);`;
+
       // other way to do it:
       //const addInfo = `INSERT INTO employees SET ?`;
       //   connection
@@ -77,9 +81,11 @@ const newEmployee = (connection) => {
         data.manager,
       ]);
     })
-    .then(function (results) {
+    .then(function () {
       // console.table(results[0]);
-      console.log(`${data.first_name} ${data.last_name} has been added to the database!`);
+      console.log(
+        `New employee has been added to the database!`
+      );
     })
     .catch((err) => {
       console.log(err);
