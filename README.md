@@ -47,3 +47,7 @@ In order to complete this assignment, I have referred to a few online resources:
 #### CSS Style sheet organization
 * https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Organizing
 * https://css-tricks.com/methods-organize-css/
+
+## Credits
+
+To complete this assignment, I had help from my tutor Wesley Clement. 
