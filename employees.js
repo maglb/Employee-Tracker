@@ -9,7 +9,7 @@ FROM employees AS a
 LEFT JOIN employees AS b ON a.manager_id = b.id
 JOIN roles ON a.role_id = roles.id;`;
 
-  connection
+  return connection
     .query(allEmployees)
     .then(function (results) {
       console.table(results[0]);
@@ -19,12 +19,78 @@ JOIN roles ON a.role_id = roles.id;`;
     });
 };
 
-const addEmployees = (connection, data) => {
-  const addInfo = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
-  VALUES ('${data.first_name}', '${data.last_name}', ${data.role_id}, ${data.manager_id});`;
+// const addEmployees = (data) => {
+//   const addInfo = `INSERT INTO employees (first_name, last_name, title, manager)
+//   VALUES ('${data.first_name}', '${data.last_name}', ${data.role}, ${data.manager});`;
 
-  connection
-    .query(addInfo)
+//   connection
+//     .query(addInfo)
+//     .then(function (results) {
+//       console.table(results[0]);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// };
+
+// Get data about new employee
+const newEmployee = (connection) => {
+  // Get data for all employee
+  // connection.query('SELECT id, title FROM roles');
+  return Promise.all([
+    connection.query("SELECT id AS value, title AS name FROM roles"),
+    connection.query(
+      "SELECT id AS value, CONCAT (first_name, ' ', last_name) AS name FROM employees"
+    ),
+  ])
+    .then(([[roles], [employees]]) => {
+      // const roles = result[0][0];
+      // const employees = result[1][0];
+      employees.push({
+        name: "None",
+        value: null,
+      });
+      console.log(roles);
+      console.log(employees);
+      return inquirer.prompt([
+        {
+          type: "input",
+          name: "first_name",
+          message: "What is the new employee's first name?",
+        },
+        {
+          type: "input",
+          name: "last_name",
+          message: "What is the new employee's last name?",
+        },
+        {
+          type: "list",
+          name: "role",
+          choices: roles,
+        },
+        {
+          type: "list",
+          name: "manager",
+          choices: employees,
+        },
+      ]);
+    })
+    .then((data) => {
+      console.log(data);
+      // addEmployees(data);
+      const addInfo = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);`;
+      // other way to do it:
+      //const addInfo = `INSERT INTO employees SET ?`;
+      //   connection
+      // .query(addInfo, data)
+
+      return connection.query(addInfo, [
+        data.first_name,
+        data.last_name,
+        data.role,
+        data.manager,
+      ]);
+    })
     .then(function (results) {
       console.table(results[0]);
     })
@@ -33,33 +99,4 @@ const addEmployees = (connection, data) => {
     });
 };
 
-const newEmployee = () => {
-  return inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "first_name",
-        message: "What is the new employee's first name?",
-      },
-      {
-        type: "input",
-        name: "last_name",
-        message: "What is the new employee's last name?",
-      },
-      {
-        type: "options",
-        name: "role",
-        choices: ["Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer", "Lead Software Engineer", "Creative Director", "Copy Writer", "Sales Lead", "Salesperson"],
-      },
-      {
-        type: "options",
-        name: "manager",
-        choices: ["None", "Briana Lowel", "John Meyer", "Jessica Spears", "Katherine Grey", "Robert Smith", "Peter McDonals", "Bryan Ruth", "Hannah Gold"],
-      },
-    ])
-    .then((data) => {
-      addEmployees(data);
-    });
-};
-
-module.exports = { viewEmployees, addEmployees };
+module.exports = { viewEmployees, newEmployee };
