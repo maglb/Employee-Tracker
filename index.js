@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const { viewEmployees, addEmployees, newEmployee } = require("./employees");
-const { viewRoles, addRole } = require("./roles");
-const { viewDepartments } = require("./departments");
+const { viewRoles, addRole, UpdateRole } = require("./roles");
+const { viewDepartments, addDepartment } = require("./departments");
 const express = require("express");
 const mysql = require("mysql2/promise");
 const db = require("./config/connection");
@@ -48,6 +48,9 @@ const startApp = (connection) => {
         case "Add A Department":
           return addDepartment(connection);
           break;
+        case "Add A Department":
+          return UpdateRole(connection);
+          break;
         case "Exit":
           return true;
           break;
@@ -64,34 +67,6 @@ if (!shouldExit) {
 function init() {
   db.then((connection) => {
     return startApp(connection)
-      // .then((data) => {
-      //   switch (data.options) {
-      //     case "View All Employees":
-      //       return viewEmployees(connection);
-      //       break;
-      //     case "Add An Employee":
-      //       return newEmployee(connection);
-      //       break;
-      //     case "Update An Employee Role":
-      //       return updateEmployee(connection);
-      //       break;
-      //     case "View All Roles":
-      //       return viewRoles(connection);
-      //       break;
-      //     case "Add A Role":
-      //       return addRole(connection);
-      //       break;
-      //     case "View All Departments":
-      //       return viewDepartments(connection);
-      //       break;
-      //     case "Add A Department":
-      //       return addDepartment(connection);
-      //       break;
-      //     case "Exit":
-      //       return exit();
-      //       break;
-      //   }
-      // })
       .catch((err) => console.error(err))
       .then( () => {
          console.log("Goodbye");
