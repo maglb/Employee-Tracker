@@ -21,7 +21,6 @@ ORDER BY roles.id ASC;`;
 // Get data about new role
 const addRole = (connection) => {
   // Get data for all roles
-  // connection.query('SELECT id, title FROM roles');
   return Promise.all([
     connection.query("SELECT id AS value, title AS name FROM roles"),
   ])
@@ -58,7 +57,9 @@ const addRole = (connection) => {
       ]);
     })
     .then(function (results) {
-      console.table(results[0]);
+     console.log(
+       `${data.role} has been added to the database!`
+     );
     })
     .catch((err) => {
       console.log(err);
