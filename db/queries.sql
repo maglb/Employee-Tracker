@@ -2,7 +2,8 @@
 -- Combine roles and department tables
 SELECT roles.id, roles.title, departments.department_name, roles.salary
 FROM roles
-JOIN departments ON departments.id = roles.department_id;
+JOIN departments ON departments.id = roles.department_id
+ORDER BY `id` ASC;
 
 SELECT a.id, a.first_name, a.last_name, roles.title, roles.salary,
 -- Combine first and last name of the employees and set them under manager

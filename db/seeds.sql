@@ -27,6 +27,6 @@ VALUES ("John", "Meyer", 1, 6),
        ("Briana", "Lowel", 6,  NULL),
        ("Katherine", "Grey", 7,  NULL),
        ("Bryan", "Ruth", 8, 7),
-       ("Hannah", "Gold", 3, 7);
+       ("Hannah", "Gold", 3, 2);
 
        

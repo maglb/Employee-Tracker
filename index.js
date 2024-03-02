@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const { viewEmployees, addEmployees, newEmployee } = require("./employees");
-const { viewRoles, addRole, UpdateRole } = require("./roles");
+const { viewRoles, addRole, updateRole } = require("./roles");
 const { viewDepartments, addDepartment } = require("./departments");
 const express = require("express");
 const mysql = require("mysql2/promise");
@@ -34,7 +34,7 @@ const startApp = (connection) => {
           return newEmployee(connection);
           break;
         case "Update An Employee Role":
-          return updateEmployee(connection);
+          return updateRole(connection);
           break;
         case "View All Roles":
           return viewRoles(connection);
@@ -49,7 +49,7 @@ const startApp = (connection) => {
           return addDepartment(connection);
           break;
         case "Add A Department":
-          return UpdateRole(connection);
+          return updateRole(connection);
           break;
         case "Exit":
           return true;
