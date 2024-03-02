@@ -1,59 +1,104 @@
-const inquirer = require('inquirer');
-const { viewEmployees } = require('./employees');
-const express = require('express');
-const mysql = require('mysql2/promise');
+const inquirer = require("inquirer");
+const { viewEmployees, addEmployees, newEmployee } = require("./employees");
+const { viewRoles, addRole } = require("./roles");
+const { viewDepartments } = require("./departments");
+const express = require("express");
+const mysql = require("mysql2/promise");
+const db = require("./config/connection");
 
-// const PORT = process.env.PORT || 3001;
-// const app = express();
-
-// // Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
-
-const startApp = () => {
-  return inquirer.prompt([
-    {
-      type: 'list',
-      message: 'What would you like to do?',
-      name: 'options',
-      choices: ['View All Employees', 'Add An Employee', 'Update An Employee Role', 'View All Roles', 'Add A Role', 'View All Departments', 'Add A Department', 'Exit']
-    },
-  ])
+const startApp = (connection) => {
+  return inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "What would you like to do?",
+        name: "options",
+        choices: [
+          "View All Employees",
+          "Add An Employee",
+          "Update An Employee Role",
+          "View All Roles",
+          "Add A Role",
+          "View All Departments",
+          "Add A Department",
+          "Exit",
+        ],
+      },
+    ])
+    .then((data) => {
+      switch (data.options) {
+        case "View All Employees":
+          return viewEmployees(connection);
+          break;
+        case "Add An Employee":
+          return newEmployee(connection);
+          break;
+        case "Update An Employee Role":
+          return updateEmployee(connection);
+          break;
+        case "View All Roles":
+          return viewRoles(connection);
+          break;
+        case "Add A Role":
+          return addRole(connection);
+          break;
+        case "View All Departments":
+          return viewDepartments(connection);
+          break;
+        case "Add A Department":
+          return addDepartment(connection);
+          break;
+        case "Exit":
+          return true;
+          break;
+      }
+    })
+    .then( (shouldExit) => {
+if (!shouldExit) {
+  return startApp(connection);
+}
+    })
 };
 
 // TODO: Create a function to initialize app
 function init() {
-  startApp()
-    .then((data) => {
-      switch (data.options) {
-        case 'View All Employees':
-          return viewEmployees()
-          break;
-        case 'Add An Employee':
-          return addEmployee()
-          break;
-        case 'Update An Employee Role':
-          return updateEmployee()
-          break;
-        case 'View All Roles':
-          return viewRoles()
-          break;
-        case 'Add A Role':
-          return addRole()
-          break;
-        case 'View All Departments':
-          return viewDepartments()
-          break;
-        case 'Add A Department':
-          return addDepartment()
-          break;
-        case 'Exit':
-          return exit()
-          break;
-      }
-    })
-    .catch((err) => console.error(err));
-};
+  db.then((connection) => {
+    return startApp(connection)
+      // .then((data) => {
+      //   switch (data.options) {
+      //     case "View All Employees":
+      //       return viewEmployees(connection);
+      //       break;
+      //     case "Add An Employee":
+      //       return newEmployee(connection);
+      //       break;
+      //     case "Update An Employee Role":
+      //       return updateEmployee(connection);
+      //       break;
+      //     case "View All Roles":
+      //       return viewRoles(connection);
+      //       break;
+      //     case "Add A Role":
+      //       return addRole(connection);
+      //       break;
+      //     case "View All Departments":
+      //       return viewDepartments(connection);
+      //       break;
+      //     case "Add A Department":
+      //       return addDepartment(connection);
+      //       break;
+      //     case "Exit":
+      //       return exit();
+      //       break;
+      //   }
+      // })
+      .catch((err) => console.error(err))
+      .then( () => {
+         console.log("Goodbye");
+        return connection.end();
+      })
+  })
+}
 
 // Function call to initialize app
 init();
