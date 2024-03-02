@@ -1,4 +1,5 @@
 const express = require("express");
+const inquirer = require("inquirer");
 
 // See all departments
 const viewDepartments = (connection) => {
@@ -14,4 +15,39 @@ const viewDepartments = (connection) => {
     });
 };
 
-module.exports = { viewDepartments };
+// Get data about new role
+const addDepartment = (connection) => {
+  // Get data for all roles
+  return Promise.all([
+    connection.query(
+      "SELECT id AS value, department_name AS name FROM department"
+    ),
+  ])
+    .then((result) => {
+      const departments = result[0][0];
+      console.log(departments);
+      return inquirer.prompt([
+        {
+          type: "input",
+          name: "department",
+          message: "What is the name of the department?",
+        },
+      ]);
+    })
+    .then((data) => {
+      console.log(data);
+
+      const addInfo = `INSERT INTO departments (department_name) VALUES (?);`;
+      return connection.query(addInfo, [data.department]);
+    })
+    .then(function (results) {
+         console.log(
+           `${data.department} has been added to the database!`
+         );
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+module.exports = { viewDepartments, addDepartment };
