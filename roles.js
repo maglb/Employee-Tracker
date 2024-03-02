@@ -8,7 +8,7 @@ FROM roles
 JOIN departments ON departments.id = roles.department_id
 ORDER BY roles.id ASC;`;
 
-  connection
+  return connection
     .query(allRoles)
     .then(function (results) {
       console.table(results[0]);
@@ -22,11 +22,15 @@ ORDER BY roles.id ASC;`;
 const addRole = (connection) => {
   // Get data for all roles
   return Promise.all([
-    connection.query("SELECT id AS value, title AS name FROM roles"),
+    connection.query(
+      "SELECT id AS value, department_name AS name FROM departments"
+    ),
   ])
     .then((result) => {
       const departments = result[0][0];
-      console.log(departments);
+      // console.log(departments);
+
+      // Collect data about the new role
       return inquirer.prompt([
         {
           type: "input",
@@ -47,8 +51,8 @@ const addRole = (connection) => {
       ]);
     })
     .then((data) => {
-      console.log(data);
-
+      // console.log(data);
+      // Insert new data into the table roles
       const addInfo = `INSERT INTO roles (title, department_id, salary) VALUES (?, ?, ?);`;
       return connection.query(addInfo, [
         data.role,
@@ -56,10 +60,8 @@ const addRole = (connection) => {
         data.salary,
       ]);
     })
-    .then(function (results) {
-     console.log(
-       `${data.role} has been added to the database!`
-     );
+    .then(function () {
+      console.log(`New role has been added to the database!`);
     })
     .catch((err) => {
       console.log(err);
